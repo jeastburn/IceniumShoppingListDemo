@@ -11,6 +11,10 @@
     <DeviceOrientations>Portrait;Landscape</DeviceOrientations>
     <iOSStatusBarStyle>Default</iOSStatusBarStyle>
     <AndroidHardwareAcceleration>false</AndroidHardwareAcceleration>
+    <BundleVersion>1.0</BundleVersion>
+    <iOSDisplayName />
+    <iOSDeviceFamily>1;2</iOSDeviceFamily>
+    <AndroidVersionCode>1</AndroidVersionCode>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="App_Resources" />
@@ -74,6 +78,22 @@
       <Platform>Android</Platform>
       <TargetName>cordova.js</TargetName>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <CordovaPlugin Include="com.phonegap.plugins.sqlite">
+      <Version>0.0.2</Version>
+      <Name>SQLite</Name>
+    </CordovaPlugin>
+  </ItemGroup>
+  <ItemGroup>
+    <CordovaPluginContent Include="com.phonegap.plugins.sqlite\Android\SQLitePlugin.js">
+      <Platform>Android</Platform>
+      <TargetName>SQLitePlugin.js</TargetName>
+    </CordovaPluginContent>
+    <CordovaPluginContent Include="com.phonegap.plugins.sqlite\iOS\SQLitePlugin.js">
+      <Platform>iOS</Platform>
+      <TargetName>SQLitePlugin.js</TargetName>
+    </CordovaPluginContent>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Telerik\ICE\Tools\Mobile\MobileTools.targets" />
 </Project>
