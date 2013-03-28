@@ -1,41 +1,60 @@
-// JavaScript Document
-
 // Wait for PhoneGap to load
-document.addEventListener("deviceready", onDeviceReady, false);
+document.addEventListener("deviceready", init, false);
 
 var myApp = new kendo.mobile.Application(document.body, { transition: "slide", layout: "mobile-tabstrip" });
 //var myApp = {};
 myApp.db = null;
+myApp.activeListView = null;
+myApp.completedListView = null;
 
 // PhoneGap is ready
-function onDeviceReady() {
+function init() { 
+
+    myApp.activeListView = $("#activeItemList").kendoMobileListView({
+                template: $("#list-template").html(),
+                style: 'inset'
+            }).data("kendoMobileListView");
+ 
+    myApp.completedListView = $("#completedItemList").kendoMobileListView({
+                template: $("#completed-list-template").html(),
+                style: 'inset'
+            }).data("kendoMobileListView");
     
     myApp.openDb();
     myApp.createTable();
     navigator.splashscreen.hide();
 }
 
+
+
 function addItem() {
     var item = document.getElementById("txtItem");
-	myApp.addItem(item.value);
+    if (item.value && item.value.length > 0)
+    {
+        console.log("Adding item: " + item.value);
+	    myApp.addItem(item.value);
+    }
 	item.value = "";
 }
 
 
 myApp.openDb = function() {
     if(window.sqlitePlugin !== undefined) {
-        myApp.db = window.sqlitePlugin.openDatabase("shopping_list");
+        console.log("Using SQLite Plugin DB");
+        myApp.db = window.sqlitePlugin.openDatabase("ShoppingListDB");
     } else {
         // For debugin in simulator fallback to native SQL Lite
         console.log("Use built in SQLite");
-        myApp.db = window.openDatabase("shopping_list", "1.0", "Shopping List Demo", 200000);
+        myApp.db = window.openDatabase("ShoppingListDB", "1.0", "Shopping List Demo", 200000);
     }
 }
       
 myApp.createTable = function() {
 	var db = myApp.db;
 	db.transaction(function(tx) {
-		tx.executeSql("CREATE TABLE IF NOT EXISTS shopping_list(id INTEGER PRIMARY KEY ASC, item_name TEXT, is_done INTEGER)", []);
+		tx.executeSql("CREATE TABLE IF NOT EXISTS shopping_list(id INTEGER PRIMARY KEY ASC, item_name TEXT, is_done INTEGER)", [], 
+                      myApp.onSuccess,
+					  myApp.onError);
 	});
 }
 
@@ -59,23 +78,45 @@ myApp.markComplete = function(itemId){
 	});
 }
 
+myApp.clearCompleted = function() {
+    var db = myApp.db;
+	db.transaction(function(tx) {
+		tx.executeSql("DELETE FROM shopping_list WHERE is_done = 1",
+					  [],
+					  myApp.onSuccess,
+					  myApp.onError);
+	});
+}
+
 myApp.refresh = function() {
-	var renderActiveItem = function (row) {
-        return "<li>" + row.item_name + "<a data-role='detailbutton' onclick='myApp.markComplete(" + row.id + ");' data-icon='action'></a></li>";
-	}
+    var sorting = function(a, b){
+            var a1= a.item_name, b1= b.item_name;
+            if(a1== b1) return 0;
+            return a1> b1? 1: -1;
+        }
     
 	var render = function (tx, rs) {
-		var activeRows = "";
-        var completedRows = "";
-		var activeList = document.getElementById("activeItemList");
-        var completedList;
+		var activeRows = new Array();
+        var completedRows = new Array();
+
 		for (var i = 0; i < rs.rows.length; i++) {
             if (rs.rows.item(i).is_done === 0) {
-			    activeRows += renderActiveItem(rs.rows.item(i));
+                
+                activeRows.push(rs.rows.item(i));
+            }
+            else {
+                completedRows.push(rs.rows.item(i));
             }
 		}
+        
+        // sort
+        activeRows.sort(sorting);
+        completedRows.sort(sorting);        
       
-		activeList.innerHTML = activeRows;
+        var ds = new kendo.data.DataSource({ data: activeRows });
+        var dscomplete = new kendo.data.DataSource({ data: completedRows });
+        myApp.activeListView.setDataSource(ds);
+        myApp.completedListView.setDataSource(dscomplete);
 	}
     
 	var db = myApp.db;
