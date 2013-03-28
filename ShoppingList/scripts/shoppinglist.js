@@ -2,7 +2,7 @@
 document.addEventListener("deviceready", init, false);
 
 var myApp = new kendo.mobile.Application(document.body, { transition: "slide", layout: "mobile-tabstrip" });
-//var myApp = {};
+
 myApp.db = null;
 myApp.activeListView = null;
 myApp.completedListView = null;

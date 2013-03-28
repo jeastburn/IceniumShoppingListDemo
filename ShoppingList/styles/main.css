@@ -28,7 +28,6 @@ body
 .km-root .km-pane .km-view .km-check {
     background-size: 100% 100%;
     -webkit-background-clip: border-box;
-    /*background-color: currentcolor;*/
 }
 
 .km-check {
@@ -48,4 +47,15 @@ body
     margin-top: -.9rem;
     width: 1.6rem;
     height: 1.6rem;
+}
+
+/* Red ClearCompleted button */
+.completedButton .km-button:not(.km-back)
+{
+    width: 90%;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    background-color: darkred !important;
+    display: block;
 }
