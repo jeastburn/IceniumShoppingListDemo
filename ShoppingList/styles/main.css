@@ -3,26 +3,25 @@ body
     font: Arial, sans-serif;
 }
 
-.buttonArea,
-.footerText,
-#geoLocationContainer,
-#helloWorldInput,
-#helloWorldText
+.buttonArea
 {
     text-align: center;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 #txtItem
 {
     border: 1px solid #AAA;
-    border-radius: 15px;
+    border-radius: 6px;
     position:static;
     margin-left: 1em;
-    margin-top: 0.3em;
+    margin-top: 1em;
     margin-bottom: 0.3em;
     background:white;
     color: black;
     padding: 3px;
+    height: 2rem;
 }
 
 /* Remove font icons styling, use .km- + data-icon name if only one should be overridden */
@@ -35,5 +34,18 @@ body
 .km-check {
     -webkit-mask-box-image: url("img/check.png");
     background-color: white;
-    margin: 1px;
+}
+
+.km-ios .km-check {
+    padding-left: 5px;
+    padding-top: 5px;
+}
+
+/* Make detail buttons bigger */
+.km-ios .km-detail 
+{
+    line-height: 1.3rem;
+    margin-top: -.9rem;
+    width: 1.6rem;
+    height: 1.6rem;
 }

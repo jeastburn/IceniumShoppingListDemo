@@ -13,14 +13,11 @@
         <link href="styles/main.css" rel="stylesheet" />
     </head>
     <body>
-        <div data-role="view" id="tabstrip-add" data-title="Add Item">
+        <div data-role="view" id="tabstrip-list" data-title="Shopping List">
             <div class="buttonArea">
                 <input class="inputBox" type="text" id="txtItem" placeholder="Add New Item" />
-                <a id="addButton" data-role="button" onclick="addItem()" data-icon="add">Add</a>
+                <a id="addButton" data-role="button" data-click="addItem" data-icon="add"></a>
             </div>
-        </div>
-
-        <div data-role="view" id="tabstrip-list" data-title="Shopping List">
             <div id="itemContainer">
                 <ul id="activeItemList"></ul>
             </div>
@@ -29,7 +26,7 @@
         <div data-role="view" id="tabstrip-done" data-title="Completed">
             <ul id="completedItemList"></ul>
             <div class="completedButton">
-                <a data-role="button" onclick="myApp.clearCompleted(); return false;" style="margin: 1em auto .4em auto;">Clear Completed</a>
+                <a data-role="button" data-click="myApp.clearCompleted" style="margin: 1em auto .4em auto; font-size: 1.2em">Clear Completed</a>
             </div>
             
             <style scoped>
@@ -54,7 +51,6 @@
 
             <div data-role="footer">
                 <div data-role="tabstrip">
-                    <a href="#tabstrip-add" data-icon="add">Add</a>
                     <a href="#tabstrip-list" data-icon="bookmarks">List</a>
                     <a href="#tabstrip-done" data-icon="cart">Done</a>
                 </div>
@@ -62,7 +58,7 @@
         </div>
 
         <script id="list-template" type="text/x-kendo-template">
-            <span>#: item_name #<a data-role='detailbutton' href='\#' onclick='myApp.markComplete(#:id#); return false;' data-icon='check'></a></span>
+            <span>#: item_name #<a data-role='detailbutton' data-click='markComplete' data-id='#:id#' data-icon='check'></a></span>
         </script>
         <script id="completed-list-template" type="text/x-kendo-template">
             <span>#: item_name #</span>

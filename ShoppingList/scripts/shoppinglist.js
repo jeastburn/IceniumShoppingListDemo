@@ -19,13 +19,16 @@ function init() {
                 template: $("#completed-list-template").html(),
                 style: 'inset'
             }).data("kendoMobileListView");
-    
+
     myApp.openDb();
     myApp.createTable();
     navigator.splashscreen.hide();
 }
 
-
+function markComplete(e){
+    var data = e.button.data();
+    myApp.markComplete(data.id);
+}
 
 function addItem() {
     var item = document.getElementById("txtItem");
@@ -39,6 +42,8 @@ function addItem() {
 
 
 myApp.openDb = function() {
+    console.log("About to open DB");
+    
     if(window.sqlitePlugin !== undefined) {
         console.log("Using SQLite Plugin DB");
         myApp.db = window.sqlitePlugin.openDatabase("ShoppingListDB");
