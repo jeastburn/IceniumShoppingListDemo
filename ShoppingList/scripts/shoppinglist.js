@@ -3,13 +3,18 @@ document.addEventListener("deviceready", init, false);
 
 var myApp = new kendo.mobile.Application(document.body, { transition: "slide", layout: "mobile-tabstrip" });
 
+myApp._queryBase = "https://www.googleapis.com/shopping/search/v1/public/products?key=AIzaSyDPiYAwhCAw8ZYnLCbgPb8UFn-1rndKivk&country=US&startIndex=1&maxResults=1&promotions.enabled=false&orderby=relevance&q=";
 myApp.db = null;
 myApp.activeListView = null;
 myApp.completedListView = null;
+myApp.scanResult = null;
 
 // PhoneGap is ready
 function init() { 
 
+    // Hide "Add Scanned Item" button
+    $("#addScanButton").hide();
+    
     myApp.activeListView = $("#activeItemList").kendoMobileListView({
                 template: $("#list-template").html(),
                 style: 'inset'
@@ -19,6 +24,7 @@ function init() {
                 template: $("#completed-list-template").html(),
                 style: 'inset'
             }).data("kendoMobileListView");
+    
 
     myApp.openDb();
     myApp.createTable();
@@ -38,6 +44,15 @@ function addItem() {
 	    myApp.addItem(item.value);
     }
 	item.value = "";
+}
+
+function addScannedItem() {
+    if (myApp.scanResult && myApp.scanResult.length > 0) {
+        myApp.addItem(myApp.scanResult);
+        myApp.scanResult = null;
+        $("#scanResult").html('');
+        $("#addScanButton").hide();
+    }
 }
 
 
@@ -139,4 +154,47 @@ myApp.onError = function(tx, e) {
 myApp.onSuccess = function(tx, r) {
 	myApp.refresh();
 }
+
+// Barcode search extensions  
+myApp.scan = function() {
+		var that = this;
+		window.plugins.barcodeScanner.scan(
+			function(result) {
+				if (!result.cancelled) {
+                    myApp._searchCode(result.text);
+					//that._addMessageToLog(result.format + " | " + result.text);    
+				}
+			}, 
+			function(error) {
+				console.log("Scanning failed: " + error);
+			});
+	};
+    
+myApp._searchCode = function(barcodeText) {
+        var that = this;
+        $.ajax({
+                url: that._queryBase + barcodeText,
+                crossDomain: true
+            }).done(
+            function(data, textStatus, jqXHR){
+                    if (data.items && data.items.length > 0) {
+                        var title = data.items[0].product.title;
+                        if (title.length > 30) {
+                            title = title.substring(0,30) + "...";
+                        }
+                        that._addMessageToLog(title);
+                        that.scanResult = title;
+                        $("#addScanButton").show();
+                    }
+                    else {
+                        that._addMessageToLog("No Items Found");
+                        that.scanResult = null;
+                    }
+                }
+        );
+    };
+
+myApp._addMessageToLog = function(message) {
+        $("#scanResult").html(message);
+	};
 

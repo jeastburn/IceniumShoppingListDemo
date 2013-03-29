@@ -10,6 +10,11 @@ body
     margin-right: auto;
 }
 
+.extraSpace {
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
+}
+
 #txtItem
 {
     border: 1px solid #AAA;
@@ -47,6 +52,12 @@ body
     margin-top: -.9rem;
     width: 1.6rem;
     height: 1.6rem;
+}
+
+/* Larger buttons */
+.largerButton {
+    font-size: 1.5em;
+    background-color: green;
 }
 
 /* Red ClearCompleted button */

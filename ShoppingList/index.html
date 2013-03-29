@@ -4,6 +4,7 @@
         <title></title>
         <meta charset="utf-8" />
         <script src="cordova.js"></script>
+        <script src="Plugins/Barcode Scanner/barcodescanner.js"></script>
         <script src="Plugins/SQLite/SQLitePlugin.js"></script>
         <script src="kendo/js/jquery.min.js"></script>
         <script src="kendo/js/kendo.mobile.min.js"></script>
@@ -13,10 +14,18 @@
         <link href="styles/main.css" rel="stylesheet" />
     </head>
     <body>
+        <div data-role="view" id="tabstrip-scan" data-title="Scan Barcode">
+			<div class="buttonArea">
+				<a data-role="button" id="scanButton" data-icon="camera" data-click="myApp.scan" class="largerButton extraSpace">Scan</a>
+                <div id="scanResult" class="extraSpace" style="font-size: 1.5em;"></div>
+                <a data-role="button" id="addScanButton" data-icon="add" data-click="addScannedItem" class="largerButton extraSpace" style="display: none;">Add</a>
+			</div>
+        </div>
+        
         <div data-role="view" id="tabstrip-list" data-title="Shopping List">
             <div class="buttonArea">
                 <input class="inputBox" type="text" id="txtItem" placeholder="Add New Item" />
-                <a id="addButton" data-role="button" data-click="addItem" data-icon="add"></a>
+                <a id="addButton" data-role="button" data-click="addItem" data-icon="add" class="largerButton"></a>
             </div>
             <div id="itemContainer">
                 <ul id="activeItemList"></ul>
@@ -39,6 +48,7 @@
 
             <div data-role="footer">
                 <div data-role="tabstrip">
+                    <a href="#tabstrip-scan" data-icon="camera">Scan</a>
                     <a href="#tabstrip-list" data-icon="bookmarks">List</a>
                     <a href="#tabstrip-done" data-icon="cart">Done</a>
                 </div>
