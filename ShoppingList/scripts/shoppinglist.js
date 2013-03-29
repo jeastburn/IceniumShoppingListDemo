@@ -157,44 +157,46 @@ myApp.onSuccess = function(tx, r) {
 
 // Barcode search extensions  
 myApp.scan = function() {
-		var that = this;
-		window.plugins.barcodeScanner.scan(
-			function(result) {
-				if (!result.cancelled) {
-                    myApp._searchCode(result.text);
-					//that._addMessageToLog(result.format + " | " + result.text);    
-				}
-			}, 
-			function(error) {
-				console.log("Scanning failed: " + error);
-			});
-	};
+	window.plugins.barcodeScanner.scan(
+		function(result) {
+			if (!result.cancelled) {
+                myApp._searchCode(result.text);
+			}
+		}, 
+		function(error) {
+			console.log("Scanning failed: " + error);
+		});
+};
     
 myApp._searchCode = function(barcodeText) {
-        var that = this;
-        $.ajax({
-                url: that._queryBase + barcodeText,
-                crossDomain: true
-            }).done(
-            function(data, textStatus, jqXHR){
-                    if (data.items && data.items.length > 0) {
-                        var title = data.items[0].product.title;
-                        if (title.length > 30) {
-                            title = title.substring(0,30) + "...";
-                        }
-                        that._addMessageToLog(title);
-                        that.scanResult = title;
-                        $("#addScanButton").show();
+    var that = this;
+    $.ajax({
+            url: that._queryBase + barcodeText,
+            crossDomain: true
+        }).done(
+        function(data, textStatus, jqXHR){
+                if (data.items && data.items.length > 0) {
+                    var title = data.items[0].product.title;
+                    
+                    console.log("Found Search Result: " + title);
+                    
+                    if (title.length > 30) {
+                        title = title.substring(0,30) + "...";
                     }
-                    else {
-                        that._addMessageToLog("No Items Found");
-                        that.scanResult = null;
-                    }
+                    that._addMessageToLog(title);
+                    that.scanResult = title;
+                    $("#addScanButton").show();
                 }
-        );
-    };
+                else {
+                    console.log("No search result found for: " + barcodeText);
+                    that._addMessageToLog("No Items Found");
+                    that.scanResult = null;
+                }
+            }
+    );
+};
 
 myApp._addMessageToLog = function(message) {
-        $("#scanResult").html(message);
-	};
+    $("#scanResult").html(message);
+};
 
