@@ -3,7 +3,7 @@ document.addEventListener("deviceready", init, false);
 
 var myApp = new kendo.mobile.Application(document.body, { transition: "slide", layout: "mobile-tabstrip" });
 
-myApp._queryBase = "https://www.googleapis.com/shopping/search/v1/public/products?key=AIzaSyDPiYAwhCAw8ZYnLCbgPb8UFn-1rndKivk&country=US&startIndex=1&maxResults=1&promotions.enabled=false&orderby=relevance&q=";
+myApp._queryBase = "https://www.googleapis.com/shopping/search/v1/public/products?key=[YOUR_API_KEY]&country=US&startIndex=1&maxResults=1&promotions.enabled=false&orderby=relevance&q=";
 myApp.db = null;
 myApp.activeListView = null;
 myApp.completedListView = null;
